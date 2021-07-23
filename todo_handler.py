@@ -5,26 +5,29 @@ import json
 
 
 def create_item(event, context):
-    if 'title' not in event['body'] or 'task' not in event['body']:
-        response = {"statusCode": 400, "body": "Please provide title and task"}
-    else:
+    if 'body' in event and event['body']:
         input_data = json.loads(event['body'])
-        title = input_data['title']
-        task = input_data['task']
-        dynamodb = boto3.client('dynamodb', region_name="us-east-1")
-        unique_id = str(uuid4())
-        try:
-            result = dynamodb.put_item(TableName='Todo',
-                                       Item={'UUID': {'S': unique_id}, 'Title': {'S': title}, 'Task': {'S': task}})
-            if result['ResponseMetadata']['HTTPStatusCode'] == 200:
-                response = {"statusCode": 200,
-                            "body": "Your todo item has been inserted successfully! Go " + task + "!"}
-            else:
-                response = {"statusCode": 400,
-                            "body": "There was an error inserting your todo item! Please try again"}
+        if 'title' not in input_data or 'task' not in input_data:
+            response = {"statusCode": 400, "body": "Please provide title and task"}
+        else:
+            title = input_data['title']
+            task = input_data['task']
+            dynamodb = boto3.client('dynamodb', region_name="us-east-1")
+            unique_id = str(uuid4())
+            try:
+                result = dynamodb.put_item(TableName='Todo',
+                                           Item={'UUID': {'S': unique_id}, 'Title': {'S': title}, 'Task': {'S': task}})
+                if result['ResponseMetadata']['HTTPStatusCode'] == 200:
+                    response = {"statusCode": 200,
+                                "body": "Your todo item has been inserted successfully! Go " + task + "!"}
+                else:
+                    response = {"statusCode": 400,
+                                "body": "There was an error inserting your todo item! Please try again"}
 
-        except Exception as e:
-            response = {"statusCode": 400, "body": "There was an error inserting your todo item! Please try again"}
+            except Exception as e:
+                response = {"statusCode": 400, "body": "There was an error inserting your todo item! Please try again"}
+    else:
+        response = {"statusCode": 400, "body": "Please provide title and task"}
 
     return response
 

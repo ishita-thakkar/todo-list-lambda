@@ -48,9 +48,10 @@ class TestFetch(unittest.TestCase):
         """
         event = {"body": json.dumps({"id": "d6015715-c472-4a92-b0a1-73b9e6d15dd5"})}
         result = todo_handler.fetch_items(event, None)
+        result_body = json.loads(result["body"])
         self.assertEqual(result["statusCode"], 200)
-        self.assertEqual(result["body"][0]["Title"], "plants")
-        self.assertEqual(result["body"][0]["Task"], "water the plants")
+        self.assertEqual(result_body[0]["Title"], "plants")
+        self.assertEqual(result_body[0]["Task"], "water the plants")
 
 
 if __name__ == '__main__':
