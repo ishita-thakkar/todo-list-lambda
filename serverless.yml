@@ -1,0 +1,32 @@
+org: ishita2302
+app: todo-app
+service: todo-list
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource: "arn:aws:dynamodb:us-east-1:883112455282:table/Todo"
+
+functions:
+  create_item:
+    handler: todo_handler.create_item
+    events:
+      - http:
+          path: create_item
+          method: post
+
+  fetch_items:
+    handler: todo_handler.fetch_items
+    events:
+      - http:
+          path: fetch_items
+          method: post
