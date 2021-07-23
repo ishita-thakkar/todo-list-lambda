@@ -7,6 +7,7 @@ frameworkVersion: '2'
 provider:
   name: aws
   runtime: python3.8
+  stage: prod
   lambdaHashingVersion: 20201221
   iamRoleStatements:
     - Effect: "Allow"
